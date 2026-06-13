@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Civic Fact Hub - Mobile App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Styles for App-like feel */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #e5e7eb; /* Latar belakang abu-abu untuk desktop */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        /* Mobile Container Constraint */
+        .app-container {
+            width: 100%;
+            max-width: 414px; /* Lebar standar iPhone Max */
+            height: 100vh;
+            background-color: #f8fafc;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Rounded corners for desktop view to look like a phone */
+        @media (min-width: 480px) {
+            .app-container {
+                height: 90vh;
+                border-radius: 2.5rem;
+                border: 8px solid #1e293b;
+            }
+        }
+
+        /* Hide Scrollbar but keep functionality */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* View Transitions */
+        .view-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            height: 100%;
+            overflow-y: auto;
+            padding-bottom: 100px; /* Space for bottom nav */
+        }
+        .view-content.active {
+            display: block;
+            opacity: 1;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #4f46e5, #ec4899);
+        }
+
+        /* Smooth horizontal scrolling snap */
+        .snap-x-mandatory {
+            scroll-snap-type: x mandatory;
+        }
+        .snap-center {
+            scroll-snap-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- App Header -->
+        <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4 flex justify-between items-center border-b border-gray-100">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-pink-200">
+                    CF
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg text-gray-900 leading-tight">CivicFact<span class="text-pink-500">.</span></h1>
+                    <p class="text-[10px] text-gray-500 font-medium">Verifikasi & Diskusi Publik</p>
+                </div>
+            </div>
+            <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition">
+                <i class="far fa-bell"></i>
+            </button>
+        </header>
+
+        <!-- Main Scrollable Area -->
+        <main class="flex-1 relative">
+
+            <!-- VIEW: FACT CHECK -->
+            <section id="view-fact-check" class="view-content active px-6 pt-6">
+                <h2 class="text-3xl font-extrabold mb-1">Verifikasi Info<br><span class="text-gradient">Sebelum Berbagi</span> 🛡️</h2>
+                <p class="text-sm text-gray-500 mb-6">Pastikan kebenaran informasi sebelum diteruskan ke grup keluarga atau rekan.</p>
+
+                <!-- Search/Report Box -->
+                <div class="bg-white p-1 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-8 flex items-center border border-gray-100">
+                    <div class="pl-4 text-gray-400"><i class="fas fa-search"></i></div>
+                    <input type="text" placeholder="Masukkan link berita atau media sosial..." class="flex-1 bg-transparent border-none outline-none px-3 py-4 text-sm font-medium">
+                    <button class="bg-black text-white rounded-full px-5 py-3 text-sm font-bold shadow-lg hover:scale-105 transition-transform duration-200">
+                        Cek Fakta
+                    </button>
+                </div>
+
+                <!-- Trending Checks (Horizontal Scroll) -->
+                <div class="flex justify-between items-end mb-4">
+                    <h3 class="font-bold text-gray-900 text-lg">Sedang Hangat 🔥</h3>
+                    <a href="#" class="text-xs text-indigo-600 font-bold">Lihat Semua</a>
+                </div>
+
+                <div class="flex gap-4 overflow-x-auto no-scrollbar snap-x-mandatory -mx-6 px-6 pb-6">
+                    <!-- Card 1: Hoaks -->
+                    <div class="snap-center shrink-0 w-[260px] bg-white rounded-3xl p-5 shadow-sm border border-gray-100 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-red-100 rounded-bl-full -z-0"></div>
+                        <span class="inline-block bg-red-100 text-red-600 text-[10px] font-extrabold px-3 py-1 rounded-full mb-3 uppercase tracking-wider relative z-10">
+                            🔴 HOAKS
+                        </span>
+                        <h4 class="font-bold text-gray-900 text-sm mb-2 relative z-10 line-clamp-2">"BEM Seluruh Indonesia Ancam Boikot Pemilu Depan!"</h4>
+                        <p class="text-xs text-gray-500 mb-4 line-clamp-2">Beredar video di TikTok yang mengklaim mahasiswa memboikot pemilu. Nyatanya ini video tahun 2019.</p>
+                        <button class="text-xs font-bold text-indigo-600 flex items-center gap-1">Baca Detail <i class="fas fa-arrow-right"></i></button>
+                    </div>
+
+                    <!-- Card 2: Fakta -->
+                    <div class="snap-center shrink-0 w-[260px] bg-white rounded-3xl p-5 shadow-sm border border-gray-100 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-green-100 rounded-bl-full -z-0"></div>
+                        <span class="inline-block bg-green-100 text-green-700 text-[10px] font-extrabold px-3 py-1 rounded-full mb-3 uppercase tracking-wider relative z-10">
+                            🟢 VALID TRUTH
+                        </span>
+                        <h4 class="font-bold text-gray-900 text-sm mb-2 relative z-10 line-clamp-2">Syarat Beasiswa LPDP Bakal Diubah Tahun Depan</h4>
+                        <p class="text-xs text-gray-500 mb-4 line-clamp-2">Kemenkeu secara resmi mengumumkan penyesuaian aturan pengabdian untuk *awardee*.</p>
+                        <button class="text-xs font-bold text-indigo-600 flex items-center gap-1">Baca Detail <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Lapor Button -->
+                <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-3xl p-5 mt-2 flex justify-between items-center border border-indigo-100">
+                    <div>
+                        <h4 class="font-bold text-gray-900 text-sm">Temukan Info Mencurigakan?</h4>
+                        <p class="text-xs text-gray-500 mt-1">Bantu kami verifikasi agar hoaks tidak menyebar luas.</p>
+                    </div>
+                    <button class="w-12 h-12 bg-white rounded-full shadow-md text-indigo-600 flex items-center justify-center text-xl hover:scale-110 transition-transform">
+                        <i class="fas fa-flag"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- VIEW: DIALOGUE SPACE -->
+            <section id="view-dialogue" class="view-content px-6 pt-6">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-3xl font-extrabold mb-1">Ruang<br><span class="text-gradient">Diskusi Publik</span> 💬</h2>
+                        <p class="text-sm text-gray-500">Berbagi pandangan dengan sehat dan berbasis data.</p>
+                    </div>
+                    <!-- Floating Action Button for New Post -->
+                    <button class="w-12 h-12 bg-black text-white rounded-full shadow-lg shadow-black/20 flex items-center justify-center text-xl hover:scale-105 transition-transform">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                </div>
+
+                <!-- Tabs filter -->
+                <div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar pb-2">
+                    <button class="bg-black text-white px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">🔥 Populer</button>
+                    <button class="bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">📚 Edukasi</button>
+                    <button class="bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">🌍 Lingkungan</button>
+                    <button class="bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">💼 Kebijakan</button>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Thread 1 -->
+                    <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center gap-2">
+                                <img src="https://placehold.co/100x100/e0e7ff/4f46e5?text=W" alt="User" class="w-8 h-8 rounded-full">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-900">@warga_kritis</p>
+                                    <p class="text-[10px] text-gray-400">2 jam lalu</p>
+                                </div>
+                            </div>
+                            <span class="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1">
+                                <i class="fas fa-shield-check"></i> Termoderasi
+                            </span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 text-sm mb-2">Seberapa peduli masyarakat dengan isu pemanasan global dalam visi-misi paslon?</h3>
+                        <p class="text-sm text-gray-600 mb-4 line-clamp-3">Sepertinya setiap kampanye lebih banyak berfokus pada ekonomi makro, namun masalah transisi energi sering terlewatkan. Bagaimana pandangan rekan-rekan mengenai komitmen ini?</p>
+                        
+                        <div class="flex items-center justify-between border-t border-gray-100 pt-3">
+                            <div class="flex gap-4">
+                                <button class="flex items-center gap-1 text-gray-500 hover:text-pink-500 transition-colors">
+                                    <i class="far fa-heart"></i> <span class="text-xs font-bold">124</span>
+                                </button>
+                                <button class="flex items-center gap-1 text-gray-500 hover:text-indigo-500 transition-colors">
+                                    <i class="far fa-comment-dots"></i> <span class="text-xs font-bold">45</span>
+                                </button>
+                            </div>
+                            <button class="text-gray-400 hover:text-black">
+                                <i class="fas fa-share-nodes"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Thread 2 -->
+                    <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center gap-2">
+                                <img src="https://placehold.co/100x100/fce7f3/db2777?text=U2" alt="User" class="w-8 h-8 rounded-full">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-900">@tech_bro</p>
+                                    <p class="text-[10px] text-gray-400">5 jam lalu</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-gray-900 text-sm mb-2">Bahas RUU Perlindungan Data Pribadi yang baru disahkan yuk!</h3>
+                        <p class="text-sm text-gray-600 mb-4 line-clamp-2">Data kita udah seaman apa sih sekarang? Apa denda buat perusahaan yang bocorin data udah cukup bikin jera?</p>
+                        
+                        <div class="flex items-center justify-between border-t border-gray-100 pt-3">
+                            <div class="flex gap-4">
+                                <button class="flex items-center gap-1 text-gray-500 hover:text-pink-500 transition-colors">
+                                    <i class="far fa-heart"></i> <span class="text-xs font-bold">89</span>
+                                </button>
+                                <button class="flex items-center gap-1 text-gray-500 hover:text-indigo-500 transition-colors">
+                                    <i class="far fa-comment-dots"></i> <span class="text-xs font-bold">32</span>
+                                </button>
+                            </div>
+                            <button class="text-gray-400 hover:text-black">
+                                <i class="fas fa-share-nodes"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: CIVIC INSIGHT -->
+            <section id="view-insight" class="view-content px-6 pt-6">
+                <h2 class="text-3xl font-extrabold mb-1">Wawasan<br><span class="text-gradient">Publik</span> 🧠</h2>
+                <p class="text-sm text-gray-500 mb-6">Informasi isu publik yang disajikan secara ringkas dan visual.</p>
+
+                <div class="space-y-5">
+                    <!-- Insight Card 1 (Instagram/Reels Style Thumbnail) -->
+                    <div class="relative w-full h-[320px] rounded-[2rem] overflow-hidden group">
+                        <img src="https://placehold.co/400x600/1e293b/ffffff?text=APBN+2025" alt="Background" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                        
+                        <div class="absolute bottom-0 left-0 p-6 w-full">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="bg-pink-500 text-white text-[10px] font-extrabold px-2 py-1 rounded uppercase tracking-wider">Ekonomi</span>
+                                <span class="text-white/80 text-[10px] font-medium"><i class="far fa-clock"></i> 3 min read</span>
+                            </div>
+                            <h3 class="text-white font-extrabold text-xl mb-2 leading-tight">Uang Pajak Kita Dipakai Buat Apa Aja Sih di 2025? 💸</h3>
+                            <p class="text-white/80 text-xs line-clamp-2">Bedah tuntas alokasi APBN terbaru dengan infografis simpel. Spoiler: Anggaran pendidikan naik tipis!</p>
+                        </div>
+                        <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md rounded-full p-2 text-white">
+                            <i class="far fa-bookmark"></i>
+                        </div>
+                    </div>
+
+                    <!-- Insight Card 2 -->
+                    <div class="relative w-full h-[200px] rounded-[2rem] overflow-hidden group">
+                        <img src="https://placehold.co/400x300/4f46e5/ffffff?text=RUU+Penyiaran" alt="Background" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        
+                        <div class="absolute bottom-0 left-0 p-5 w-full">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="bg-indigo-500 text-white text-[10px] font-extrabold px-2 py-1 rounded uppercase tracking-wider">Kebijakan</span>
+                            </div>
+                            <h3 class="text-white font-bold text-base mb-1 leading-tight">Kontroversi RUU Penyiaran: Bakal Bikin Kreator TikTok Kena Sensor? 📱</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="absolute bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl border-t border-gray-200 pb-safe z-50 rounded-b-none sm:rounded-b-[2.5rem] overflow-hidden">
+            <div class="flex justify-around items-center h-20 px-4">
+                
+                <button onclick="switchTab('fact-check', this)" class="nav-item flex flex-col items-center justify-center w-16 h-full text-indigo-600 transition-all duration-200">
+                    <div class="icon-wrapper text-xl mb-1 transition-transform duration-200 scale-110">
+                        <i class="fas fa-shield-check"></i>
+                    </div>
+                    <span class="text-[10px] font-bold opacity-100 transition-opacity">Verifikasi</span>
+                </button>
+
+                <button onclick="switchTab('dialogue', this)" class="nav-item flex flex-col items-center justify-center w-16 h-full text-gray-400 hover:text-gray-900 transition-all duration-200">
+                    <div class="icon-wrapper text-xl mb-1 transition-transform duration-200">
+                        <i class="far fa-comments"></i>
+                    </div>
+                    <span class="text-[10px] font-bold opacity-0 transition-opacity">Diskusi</span>
+                </button>
+
+                <button onclick="switchTab('insight', this)" class="nav-item flex flex-col items-center justify-center w-16 h-full text-gray-400 hover:text-gray-900 transition-all duration-200">
+                    <div class="icon-wrapper text-xl mb-1 transition-transform duration-200">
+                        <i class="far fa-lightbulb"></i>
+                    </div>
+                    <span class="text-[10px] font-bold opacity-0 transition-opacity">Insight</span>
+                </button>
+                
+                <!-- Profile Avatar on Nav -->
+                <button class="flex flex-col items-center justify-center w-16 h-full text-gray-400 hover:text-gray-900 transition-all duration-200">
+                    <div class="w-7 h-7 rounded-full bg-gray-200 border-2 border-transparent overflow-hidden mb-1">
+                        <img src="https://placehold.co/100x100/cbd5e1/475569?text=You" alt="Profile" class="w-full h-full object-cover">
+                    </div>
+                    <span class="text-[10px] font-bold opacity-0">Profil</span>
+                </button>
+
+            </div>
+        </nav>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, element) {
+            // 1. Hide all views
+            document.querySelectorAll('.view-content').forEach(view => {
+                view.classList.remove('active');
+            });
+            
+            // 2. Show target view
+            const targetView = document.getElementById('view-' + tabId);
+            if(targetView) {
+                targetView.classList.add('active');
+                // Scroll to top when switching
+                targetView.scrollTop = 0;
+            }
+
+            // 3. Reset all nav items styling
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('text-indigo-600');
+                item.classList.add('text-gray-400');
+                
+                // Icon scaling
+                const icon = item.querySelector('.icon-wrapper');
+                icon.classList.remove('scale-110');
+                
+                // Text visibility
+                const text = item.querySelector('span');
+                text.classList.remove('opacity-100');
+                text.classList.add('opacity-0');
+                
+                // Reset icon to outline (far)
+                const i = icon.querySelector('i');
+                if(i.classList.contains('fas')) {
+                    i.classList.replace('fas', 'far');
+                }
+            });
+
+            // 4. Set active state on clicked nav item
+            if(element) {
+                element.classList.remove('text-gray-400');
+                element.classList.add('text-indigo-600');
+                
+                const icon = element.querySelector('.icon-wrapper');
+                icon.classList.add('scale-110');
+                
+                const text = element.querySelector('span');
+                text.classList.remove('opacity-0');
+                text.classList.add('opacity-100');
+
+                // Change icon to solid (fas) for active state
+                const i = icon.querySelector('i');
+                if(i.classList.contains('far')) {
+                    i.classList.replace('far', 'fas');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
