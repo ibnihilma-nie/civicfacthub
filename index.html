@@ -2,84 +2,32 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Civic Fact Hub - Mobile App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Civic Fact Hub - Responsif</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        body {
+        html, body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #e5e7eb;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background-color: #f1f5f9; /* Slate 100 - light, clean background */
             margin: 0;
-            overflow: hidden; /* Prevent body scroll, keep it inside the app container */
-        }
-        
-        /* Device frame simulation for desktop */
-        .app-container {
-            width: 100%;
-            max-width: 414px; /* iPhone Pro Max width */
-            height: 100vh;
-            max-height: 896px;
-            background-color: #f8fafc; /* Very light slate background */
-            position: relative;
-            display: flex;
-            flex-direction: column; /* Flex layout prevents overlap */
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            overflow: hidden;
-        }
-
-        @media (min-width: 480px) {
-            .app-container {
-                height: 90vh;
-                border-radius: 2.5rem;
-                border: 8px solid #1e293b;
-            }
-        }
-
-        /* Clean Scrollbar inside the app */
-        .scrollable-area {
-            overflow-y: auto;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .scrollable-area::-webkit-scrollbar {
-            width: 4px;
-        }
-        .scrollable-area::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .scrollable-area::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1;
-            border-radius: 10px;
-        }
-
-        /* Horizontal Scroll hiding */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+            padding: 0;
+            scroll-behavior: smooth;
         }
 
         /* View Switching logic */
         .view-content {
             display: none;
-            animation: fadeIn 0.3s ease-in-out;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .view-content.active {
             display: block;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -91,295 +39,319 @@
             background-image: linear-gradient(135deg, #4f46e5, #ec4899);
         }
         
-        /* Smooth shadow for cards */
         .card-shadow {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+        }
+
+        /* Horizontal Scroll hiding */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
-<body>
+<body class="text-gray-800 antialiased">
 
-    <div class="app-container">
-        
-        <!-- Header (Fixed at top) -->
-        <header class="bg-white/90 backdrop-blur-md z-40 px-6 py-4 flex justify-between items-center border-b border-gray-100 shrink-0">
+    <header class="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-40 border-b border-gray-200 shadow-sm">
+        <!-- Max-width container to center content on desktop -->
+        <div class="max-w-2xl mx-auto px-5 py-3.5 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg shadow-sm">
                     CF
                 </div>
                 <div class="flex flex-col justify-center">
                     <h1 class="font-extrabold text-lg text-gray-900 leading-none mb-1">CivicFact<span class="text-pink-500">.</span></h1>
-                    <p class="text-[10px] text-gray-500 font-medium leading-none">Pusat Verifikasi Publik</p>
+                    <p class="text-[10px] text-gray-500 font-semibold leading-none uppercase tracking-wide">Verifikasi & Diskusi Publik</p>
                 </div>
             </div>
-            <button onclick="showToast('Tidak ada notifikasi baru')" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-gray-100 active:scale-95 transition-all">
+            <button onclick="showToast('Tidak ada notifikasi baru')" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-gray-600 hover:bg-slate-200 active:scale-95 transition-all">
                 <i class="far fa-bell text-lg"></i>
             </button>
-        </header>
+        </div>
+    </header>
 
-        <!-- Main Content Area (Takes remaining space, scrollable) -->
-        <main class="flex-1 scrollable-area bg-[#f8fafc] relative">
+    <!-- pt-24 (padding top) to clear fixed header, pb-24 to clear fixed bottom nav -->
+    <main class="max-w-2xl mx-auto w-full pt-24 pb-28 min-h-screen">
+        
+        <!-- VIEW 1: FACT CHECK -->
+        <section id="view-fact-check" class="view-content active">
             
-            <!-- VIEW 1: FACT CHECK -->
-            <section id="view-fact-check" class="view-content active pb-24">
+            <!-- Hero Section -->
+            <div class="px-5 mb-6">
+                <h2 class="text-2xl sm:text-3xl font-extrabold mb-2 text-gray-900 leading-tight">Verifikasi Info<br><span class="text-gradient">Sebelum Berbagi</span> 🛡️</h2>
+                <p class="text-sm text-gray-500 leading-relaxed max-w-md">Cek kebenaran tautan berita atau postingan media sosial agar terhindar dari disinformasi.</p>
+            </div>
+
+            <div class="px-5 mb-10">
+                <div class="bg-white p-1.5 rounded-2xl card-shadow flex items-center border border-gray-100 focus-within:border-indigo-300 focus-within:ring-4 focus-within:ring-indigo-50 transition-all">
+                    <div class="pl-4 pr-2 text-gray-400"><i class="fas fa-link"></i></div>
+                    <input type="text" placeholder="Tempel tautan (link) di sini..." class="flex-1 bg-transparent border-none outline-none py-3 text-sm font-medium text-gray-700 w-full placeholder-gray-400">
+                    <button onclick="showToast('Memproses tautan...')" class="bg-indigo-600 text-white rounded-xl px-5 py-3 text-sm font-bold shadow-md hover:bg-indigo-700 active:scale-95 transition-all whitespace-nowrap">
+                        Periksa
+                    </button>
+                </div>
+            </div>
+
+            <!-- Trending Verification -->
+            <div class="px-5 flex justify-between items-end mb-4">
+                <h3 class="font-bold text-gray-900 text-base md:text-lg">Terbaru Diverifikasi</h3>
+                <button class="text-xs text-indigo-600 font-bold hover:underline transition-colors">Lihat Semua</button>
+            </div>
+
+            <div class="flex gap-4 overflow-x-auto no-scrollbar snap-x scroll-smooth px-5 pb-6">
                 
-                <!-- Hero Section -->
-                <div class="px-6 pt-6 pb-4">
-                    <h2 class="text-2xl font-extrabold mb-2 text-gray-900">Verifikasi Info<br><span class="text-gradient">Sebelum Berbagi</span> 🛡️</h2>
-                    <p class="text-sm text-gray-500 leading-relaxed">Cek kebenaran tautan berita atau postingan media sosial agar terhindar dari disinformasi.</p>
-                </div>
-
-                <!-- Search Input -->
-                <div class="px-6 mb-8">
-                    <div class="bg-white p-1.5 rounded-2xl card-shadow flex items-center border border-gray-100 focus-within:border-indigo-300 focus-within:ring-2 focus-within:ring-indigo-50 transition-all">
-                        <div class="pl-4 pr-2 text-gray-400"><i class="fas fa-search"></i></div>
-                        <input type="text" placeholder="Tempel tautan (link) di sini..." class="flex-1 bg-transparent border-none outline-none py-3 text-sm font-medium text-gray-700 w-full">
-                        <button onclick="showToast('Memproses pencarian...')" class="bg-gray-900 text-white rounded-xl px-5 py-3 text-sm font-bold shadow-md hover:bg-black active:scale-95 transition-all whitespace-nowrap">
-                            Periksa
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Trending Verification -->
-                <div class="px-6 flex justify-between items-end mb-4">
-                    <h3 class="font-bold text-gray-900 text-base">Terbaru Diverifikasi</h3>
-                    <button class="text-xs text-indigo-600 font-bold bg-indigo-50 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition-colors">Semua</button>
-                </div>
-
-                <!-- Horizontal Scroll Container -->
-                <div class="flex gap-4 overflow-x-auto no-scrollbar snap-x scroll-smooth px-6 pb-6">
-                    
-                    <!-- Card 1 (Hoax) -->
-                    <div class="snap-start shrink-0 w-[260px] bg-white rounded-2xl p-5 card-shadow border border-red-100 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center gap-2 mb-3">
-                                <span class="bg-red-100 text-red-600 text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider">
-                                    <i class="fas fa-times-circle mr-1"></i> HOAKS
-                                </span>
-                                <span class="text-[10px] text-gray-400 font-medium">Hari ini</span>
-                            </div>
-                            <h4 class="font-bold text-gray-900 text-sm mb-2 line-clamp-2 leading-snug">Pesan Berantai WhatsApp: Radiasi HP Tingkat Tinggi Malam Ini</h4>
-                            <p class="text-xs text-gray-500 mb-4 line-clamp-2">Klaim bahwa mematikan HP karena radiasi kosmik adalah hoaks lama yang didaur ulang.</p>
-                        </div>
-                        <button onclick="showToast('Membuka detail verifikasi...')" class="text-xs font-bold text-gray-700 bg-gray-50 py-2 rounded-lg w-full text-center hover:bg-gray-100 transition-colors">Lihat Bukti</button>
-                    </div>
-
-                    <!-- Card 2 (Valid) -->
-                    <div class="snap-start shrink-0 w-[260px] bg-white rounded-2xl p-5 card-shadow border border-green-100 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center gap-2 mb-3">
-                                <span class="bg-green-100 text-green-700 text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider">
-                                    <i class="fas fa-check-circle mr-1"></i> FAKTA
-                                </span>
-                                <span class="text-[10px] text-gray-400 font-medium">Kemarin</span>
-                            </div>
-                            <h4 class="font-bold text-gray-900 text-sm mb-2 line-clamp-2 leading-snug">Perubahan Jadwal Pendaftaran CPNS Diundur</h4>
-                            <p class="text-xs text-gray-500 mb-4 line-clamp-2">BKN secara resmi mengonfirmasi penundaan pendaftaran melalui situs web resmi mereka.</p>
-                        </div>
-                        <button onclick="showToast('Membuka detail verifikasi...')" class="text-xs font-bold text-gray-700 bg-gray-50 py-2 rounded-lg w-full text-center hover:bg-gray-100 transition-colors">Lihat Bukti</button>
-                    </div>
-                </div>
-
-                <!-- Report Section -->
-                <div class="px-6">
-                    <div class="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl p-5 flex items-center justify-between border border-indigo-100/50">
-                        <div class="pr-4">
-                            <h4 class="font-bold text-gray-900 text-sm mb-1">Temukan info mencurigakan?</h4>
-                            <p class="text-[11px] text-gray-500 leading-relaxed">Bantu komunitas dengan melaporkan dugaan disinformasi.</p>
-                        </div>
-                        <button onclick="showToast('Membuka formulir pelaporan...')" class="w-12 h-12 shrink-0 bg-white rounded-full card-shadow text-indigo-600 flex items-center justify-center text-lg active:scale-95 transition-transform">
-                            <i class="fas fa-flag"></i>
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- VIEW 2: DIALOGUE SPACE -->
-            <section id="view-dialogue" class="view-content pb-24">
-                
-                <div class="px-6 pt-6 mb-4 flex justify-between items-center">
+                <!-- Card 1 (Hoax) -->
+                <div class="snap-start shrink-0 w-[260px] md:w-[280px] bg-white rounded-2xl p-5 card-shadow border border-red-50 flex flex-col justify-between">
                     <div>
-                        <h2 class="text-2xl font-extrabold text-gray-900 mb-1">Ruang <span class="text-gradient">Diskusi</span> 💬</h2>
-                        <p class="text-sm text-gray-500">Berbagi pandangan dengan sehat.</p>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-red-50 text-red-600 text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider border border-red-100">
+                                <i class="fas fa-times-circle mr-1"></i> HOAKS
+                            </span>
+                            <span class="text-[10px] text-gray-400 font-medium">Hari ini</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 text-sm mb-2 line-clamp-2 leading-snug">Pesan Berantai WhatsApp: Radiasi HP Tingkat Tinggi Malam Ini</h4>
+                        <p class="text-xs text-gray-500 mb-4 line-clamp-2">Klaim bahwa mematikan HP karena radiasi kosmik adalah hoaks lama yang didaur ulang.</p>
                     </div>
-                    <button onclick="showToast('Membuat diskusi baru...')" class="w-10 h-10 bg-gray-900 text-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-800 active:scale-95 transition-all">
-                        <i class="fas fa-plus"></i>
+                    <button onclick="showToast('Membuka detail bukti...')" class="text-xs font-bold text-gray-700 bg-slate-50 py-2.5 rounded-xl w-full text-center hover:bg-slate-100 transition-colors border border-slate-100">Lihat Fakta</button>
+                </div>
+
+                <!-- Card 2 (Valid) -->
+                <div class="snap-start shrink-0 w-[260px] md:w-[280px] bg-white rounded-2xl p-5 card-shadow border border-emerald-50 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider border border-emerald-100">
+                                <i class="fas fa-check-circle mr-1"></i> FAKTA
+                            </span>
+                            <span class="text-[10px] text-gray-400 font-medium">Kemarin</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 text-sm mb-2 line-clamp-2 leading-snug">Perubahan Jadwal Pendaftaran CPNS Diundur</h4>
+                        <p class="text-xs text-gray-500 mb-4 line-clamp-2">BKN secara resmi mengonfirmasi penundaan pendaftaran melalui situs web resmi mereka.</p>
+                    </div>
+                    <button onclick="showToast('Membuka detail bukti...')" class="text-xs font-bold text-gray-700 bg-slate-50 py-2.5 rounded-xl w-full text-center hover:bg-slate-100 transition-colors border border-slate-100">Lihat Bukti</button>
+                </div>
+
+                <!-- Card 3 (Misleading) -->
+                <div class="snap-start shrink-0 w-[260px] md:w-[280px] bg-white rounded-2xl p-5 card-shadow border border-amber-50 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-amber-50 text-amber-700 text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider border border-amber-100">
+                                <i class="fas fa-exclamation-triangle mr-1"></i> MENYESATKAN
+                            </span>
+                            <span class="text-[10px] text-gray-400 font-medium">2 hari lalu</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 text-sm mb-2 line-clamp-2 leading-snug">Video Kerusuhan di Depan Gedung Pemerintahan</h4>
+                        <p class="text-xs text-gray-500 mb-4 line-clamp-2">Konteks salah. Video tersebut merupakan kejadian tahun 2019, bukan demonstrasi terbaru.</p>
+                    </div>
+                    <button onclick="showToast('Membuka detail bukti...')" class="text-xs font-bold text-gray-700 bg-slate-50 py-2.5 rounded-xl w-full text-center hover:bg-slate-100 transition-colors border border-slate-100">Lihat Fakta</button>
+                </div>
+            </div>
+
+            <div class="px-5 mt-2">
+                <div class="bg-gradient-to-r from-indigo-50 to-pink-50 rounded-2xl p-6 flex items-center justify-between border border-indigo-100/50 card-shadow">
+                    <div class="pr-4">
+                        <h4 class="font-bold text-gray-900 text-base mb-1">Temukan info mencurigakan?</h4>
+                        <p class="text-xs text-gray-600 leading-relaxed max-w-[200px] md:max-w-none">Bantu komunitas dengan melaporkan dugaan disinformasi kepada tim relawan.</p>
+                    </div>
+                    <button onclick="showToast('Membuka formulir pelaporan...')" class="w-14 h-14 shrink-0 bg-white rounded-2xl card-shadow text-indigo-600 flex items-center justify-center text-xl hover:bg-indigo-600 hover:text-white transition-all duration-300">
+                        <i class="fas fa-flag"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-dialogue" class="view-content">
+            
+            <div class="px-5 mb-6 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-1">Ruang <span class="text-gradient">Diskusi</span> 💬</h2>
+                    <p class="text-sm text-gray-500">Berbagi pandangan sehat berbasis data.</p>
+                </div>
+                <button onclick="showToast('Membuat diskusi baru...')" class="w-12 h-12 bg-indigo-600 text-white rounded-2xl shadow-lg flex items-center justify-center hover:bg-indigo-700 active:scale-95 transition-all">
+                    <i class="fas fa-plus text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Category Pills -->
+            <div class="flex gap-2.5 mb-6 overflow-x-auto no-scrollbar px-5 pb-2">
+                <button class="bg-slate-800 text-white px-5 py-2.5 rounded-full text-xs font-bold whitespace-nowrap shadow-sm">🔥 Terhangat</button>
+                <button class="bg-white border border-slate-200 text-slate-600 px-5 py-2.5 rounded-full text-xs font-bold whitespace-nowrap hover:bg-slate-50 transition-colors">Edukasi</button>
+                <button class="bg-white border border-slate-200 text-slate-600 px-5 py-2.5 rounded-full text-xs font-bold whitespace-nowrap hover:bg-slate-50 transition-colors">Ekonomi</button>
+                <button class="bg-white border border-slate-200 text-slate-600 px-5 py-2.5 rounded-full text-xs font-bold whitespace-nowrap hover:bg-slate-50 transition-colors">Kebijakan</button>
+            </div>
+
+            <!-- Forum Threads -->
+            <div class="px-5 space-y-5">
+                
+                <!-- Thread 1 -->
+                <div class="bg-white p-5 md:p-6 rounded-2xl card-shadow border border-slate-100">
+                    <!-- User Info & Badge -->
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
+                                WK
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-900">Warga Kritis</p>
+                                <p class="text-[11px] text-gray-400">2 jam lalu</p>
+                            </div>
+                        </div>
+                        <span class="bg-indigo-50 text-indigo-700 text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 border border-indigo-100">
+                            <i class="fas fa-shield-alt text-indigo-500"></i> Termoderasi
+                        </span>
+                    </div>
+                    
+                    <!-- Content -->
+                    <h3 class="font-bold text-gray-900 text-base md:text-lg mb-2.5 leading-snug">Dampak kenaikan PPN terhadap daya beli masyarakat menengah ke bawah?</h3>
+                    <p class="text-sm text-gray-600 mb-5 leading-relaxed">Menurut rilis data terbaru, ada kekhawatiran konsumsi rumah tangga akan menurun. Bagaimana pendapat rekan-rekan mengenai kompensasi yang ideal dari pemerintah?</p>
+                    
+                    <!-- Interactions -->
+                    <div class="flex items-center justify-between border-t border-slate-100 pt-4">
+                        <div class="flex gap-6">
+                            <button onclick="toggleLike(this)" class="flex items-center gap-2 text-slate-400 hover:text-pink-500 transition-colors group">
+                                <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-pink-50 transition-colors">
+                                    <i class="far fa-heart group-active:scale-125 transition-transform text-lg"></i> 
+                                </div>
+                                <span class="text-sm font-bold like-count">124</span>
+                            </button>
+                            <button onclick="showToast('Membuka 45 komentar...')" class="flex items-center gap-2 text-slate-400 hover:text-indigo-500 transition-colors group">
+                                <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
+                                    <i class="far fa-comment-dots group-active:scale-125 transition-transform text-lg"></i> 
+                                </div>
+                                <span class="text-sm font-bold">45</span>
+                            </button>
+                        </div>
+                        <button onclick="showToast('Tautan diskusi disalin!')" class="w-8 h-8 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-full flex items-center justify-center transition-all">
+                            <i class="fas fa-share-nodes"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Thread 2 -->
+                <div class="bg-white p-5 md:p-6 rounded-2xl card-shadow border border-slate-100">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-sm">
+                                AM
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-900">Akademisi Muda</p>
+                                <p class="text-[11px] text-gray-400">5 jam lalu</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-base md:text-lg mb-2.5 leading-snug">Pembahasan RUU Perlindungan Data Pribadi: Apakah sanksi sudah cukup tegas?</h3>
+                    <p class="text-sm text-gray-600 mb-5 leading-relaxed">Melihat maraknya kebocoran data akhir-akhir ini, mari kita bedah secara objektif denda maksimal bagi pengelola data yang lalai.</p>
+                    
+                    <div class="flex items-center justify-between border-t border-slate-100 pt-4">
+                        <div class="flex gap-6">
+                            <button onclick="toggleLike(this)" class="flex items-center gap-2 text-slate-400 hover:text-pink-500 transition-colors group">
+                                <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-pink-50 transition-colors">
+                                    <i class="far fa-heart group-active:scale-125 transition-transform text-lg"></i> 
+                                </div>
+                                <span class="text-sm font-bold like-count">89</span>
+                            </button>
+                            <button onclick="showToast('Membuka 32 komentar...')" class="flex items-center gap-2 text-slate-400 hover:text-indigo-500 transition-colors group">
+                                <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
+                                    <i class="far fa-comment-dots group-active:scale-125 transition-transform text-lg"></i> 
+                                </div>
+                                <span class="text-sm font-bold">32</span>
+                            </button>
+                        </div>
+                        <button onclick="showToast('Tautan diskusi disalin!')" class="w-8 h-8 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-full flex items-center justify-center transition-all">
+                            <i class="fas fa-share-nodes"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="view-insight" class="view-content">
+            <div class="px-5 mb-6">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-1">Wawasan <span class="text-gradient">Publik</span> 🧠</h2>
+                <p class="text-sm text-gray-500">Isu kompleks yang disajikan ringkas dan mudah dipahami.</p>
+            </div>
+
+            <!-- Responsive grid for desktop -->
+            <div class="px-5 grid grid-cols-1 md:grid-cols-2 gap-5">
+                
+                <!-- Insight Card 1 -->
+                <div class="relative w-full h-[340px] md:h-[300px] rounded-3xl overflow-hidden group card-shadow bg-slate-800 cursor-pointer" onclick="showToast('Membaca artikel...')">
+                    <!-- Image/Gradient Background -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-900 to-slate-800 transition-transform duration-700 group-hover:scale-105"></div>
+                    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                    
+                    <!-- Content Overlaid -->
+                    <div class="absolute bottom-0 left-0 p-6 w-full">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="bg-pink-500 text-white text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg uppercase tracking-wide">Analisis Ekonomi</span>
+                            <span class="text-gray-300 text-xs font-medium"><i class="far fa-clock mr-1"></i> 3 mnt baca</span>
+                        </div>
+                        <h3 class="text-white font-extrabold text-xl md:text-2xl mb-2 leading-tight">Membedah Alokasi APBN: Ke Mana Aja Uang Pajak Kita? 💸</h3>
+                        <p class="text-gray-300 text-sm line-clamp-2 leading-relaxed opacity-90">Infografis sederhana untuk memahami prioritas anggaran negara tahun ini secara transparan.</p>
+                    </div>
+                    
+                    <!-- Bookmark button -->
+                    <button onclick="event.stopPropagation(); showToast('Artikel disimpan!')" class="absolute top-5 right-5 bg-white/20 backdrop-blur-md rounded-full w-10 h-10 flex items-center justify-center text-white hover:bg-white/40 transition-colors z-10">
+                        <i class="far fa-bookmark"></i>
                     </button>
                 </div>
 
-                <!-- Category Pills -->
-                <div class="flex gap-2 mb-4 overflow-x-auto no-scrollbar px-6 pb-2">
-                    <button class="bg-gray-900 text-white px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap">Terhangat</button>
-                    <button class="bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap hover:bg-gray-50">Edukasi</button>
-                    <button class="bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap hover:bg-gray-50">Ekonomi</button>
-                    <button class="bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap hover:bg-gray-50">Kebijakan</button>
-                </div>
-
-                <!-- Forum Threads -->
-                <div class="px-6 space-y-4">
+                <!-- Insight Card 2 -->
+                <div class="relative w-full h-[240px] md:h-[300px] rounded-3xl overflow-hidden group card-shadow bg-slate-800 cursor-pointer" onclick="showToast('Membaca artikel...')">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-emerald-800 to-teal-900 transition-transform duration-700 group-hover:scale-105"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                     
-                    <!-- Thread 1 -->
-                    <div class="bg-white p-5 rounded-2xl card-shadow border border-gray-100">
-                        <!-- User Info & Badge -->
-                        <div class="flex justify-between items-start mb-3">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">
-                                    WK
-                                </div>
-                                <div>
-                                    <p class="text-xs font-bold text-gray-900">Warga Kritis</p>
-                                    <p class="text-[10px] text-gray-400">2 jam lalu</p>
-                                </div>
-                            </div>
-                            <span class="bg-indigo-50 text-indigo-600 text-[9px] font-bold px-2 py-1 rounded flex items-center gap-1">
-                                <i class="fas fa-shield-alt"></i> Tervalidasi
-                            </span>
+                    <div class="absolute bottom-0 left-0 p-6 w-full">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="bg-emerald-500 text-white text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg uppercase tracking-wide">Lingkungan & Kota</span>
                         </div>
-                        
-                        <!-- Content -->
-                        <h3 class="font-bold text-gray-900 text-sm mb-2 leading-snug">Dampak kenaikan PPN 12% terhadap daya beli masyarakat menengah ke bawah?</h3>
-                        <p class="text-sm text-gray-600 mb-4 line-clamp-3 leading-relaxed">Menurut rilis data terbaru, ada kekhawatiran konsumsi rumah tangga akan menurun. Bagaimana pendapat teman-teman mengenai kompensasi yang bisa diberikan pemerintah?</p>
-                        
-                        <!-- Interactions -->
-                        <div class="flex items-center justify-between border-t border-gray-50 pt-3">
-                            <div class="flex gap-5">
-                                <button onclick="toggleLike(this)" class="flex items-center gap-1.5 text-gray-400 hover:text-pink-500 transition-colors group">
-                                    <i class="far fa-heart group-active:scale-125 transition-transform"></i> 
-                                    <span class="text-xs font-bold like-count">124</span>
-                                </button>
-                                <button onclick="showToast('Membuka kolom komentar...')" class="flex items-center gap-1.5 text-gray-400 hover:text-indigo-500 transition-colors group">
-                                    <i class="far fa-comment-dots group-active:scale-125 transition-transform"></i> 
-                                    <span class="text-xs font-bold">45</span>
-                                </button>
-                            </div>
-                            <button onclick="showToast('Tautan disalin!')" class="text-gray-400 hover:text-gray-900 active:scale-95 transition-transform">
-                                <i class="fas fa-share-nodes"></i>
-                            </button>
-                        </div>
+                        <h3 class="text-white font-extrabold text-xl md:text-2xl mb-1 leading-tight">Kualitas Udara Kota Memburuk, Apa Solusi Kebijakannya?</h3>
                     </div>
-
-                    <!-- Thread 2 -->
-                    <div class="bg-white p-5 rounded-2xl card-shadow border border-gray-100">
-                        <div class="flex justify-between items-start mb-3">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-xs">
-                                    AM
-                                </div>
-                                <div>
-                                    <p class="text-xs font-bold text-gray-900">Akademisi Muda</p>
-                                    <p class="text-[10px] text-gray-400">5 jam lalu</p>
-                                </div>
-                            </div>
-                        </div>
-                        <h3 class="font-bold text-gray-900 text-sm mb-2 leading-snug">Pembahasan RUU Perlindungan Data Pribadi: Apakah sanksi sudah cukup tegas?</h3>
-                        <p class="text-sm text-gray-600 mb-4 line-clamp-2 leading-relaxed">Melihat maraknya kebocoran data akhir-akhir ini, mari kita bedah denda maksimal bagi pengelola data.</p>
-                        
-                        <div class="flex items-center justify-between border-t border-gray-50 pt-3">
-                            <div class="flex gap-5">
-                                <button onclick="toggleLike(this)" class="flex items-center gap-1.5 text-gray-400 hover:text-pink-500 transition-colors group">
-                                    <i class="far fa-heart group-active:scale-125 transition-transform"></i> 
-                                    <span class="text-xs font-bold like-count">89</span>
-                                </button>
-                                <button onclick="showToast('Membuka kolom komentar...')" class="flex items-center gap-1.5 text-gray-400 hover:text-indigo-500 transition-colors group">
-                                    <i class="far fa-comment-dots group-active:scale-125 transition-transform"></i> 
-                                    <span class="text-xs font-bold">32</span>
-                                </button>
-                            </div>
-                            <button onclick="showToast('Tautan disalin!')" class="text-gray-400 hover:text-gray-900 active:scale-95 transition-transform">
-                                <i class="fas fa-share-nodes"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-            <!-- VIEW 3: CIVIC INSIGHT -->
-            <section id="view-insight" class="view-content pb-24">
-                <div class="px-6 pt-6 mb-6">
-                    <h2 class="text-2xl font-extrabold text-gray-900 mb-1">Wawasan <span class="text-gradient">Publik</span> 🧠</h2>
-                    <p class="text-sm text-gray-500">Isu kompleks yang disajikan secara ringkas.</p>
-                </div>
-
-                <div class="px-6 space-y-5">
                     
-                    <!-- Insight Card 1 -->
-                    <div class="relative w-full h-[320px] rounded-2xl overflow-hidden group card-shadow bg-gray-800">
-                        <!-- Simulated Image using CSS Gradients for neatness without external heavy images -->
-                        <div class="absolute inset-0 bg-gradient-to-br from-indigo-900 to-slate-800"></div>
-                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 20px 20px;"></div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-                        
-                        <!-- Content overlaid on image -->
-                        <div class="absolute bottom-0 left-0 p-5 w-full">
-                            <div class="flex items-center gap-2 mb-3">
-                                <span class="bg-pink-500 text-white text-[10px] font-extrabold px-2 py-1 rounded uppercase tracking-wide">Analisis Ekonomi</span>
-                                <span class="text-gray-300 text-[10px] font-medium"><i class="far fa-clock"></i> 3 mnt baca</span>
-                            </div>
-                            <h3 class="text-white font-extrabold text-xl mb-2 leading-snug">Membedah Alokasi APBN: Ke Mana Aja Uang Pajak Kita? 💸</h3>
-                            <p class="text-gray-300 text-xs line-clamp-2 leading-relaxed">Infografis sederhana untuk memahami prioritas anggaran negara tahun ini secara transparan.</p>
-                        </div>
-                        
-                        <!-- Bookmark button -->
-                        <button onclick="showToast('Disimpan ke koleksi!')" class="absolute top-4 right-4 bg-white/20 backdrop-blur-md rounded-full w-9 h-9 flex items-center justify-center text-white hover:bg-white/40 transition-colors">
-                            <i class="far fa-bookmark"></i>
-                        </button>
-                    </div>
-
-                    <!-- Insight Card 2 -->
-                    <div class="relative w-full h-[200px] rounded-2xl overflow-hidden group card-shadow bg-gray-800">
-                        <div class="absolute inset-0 bg-gradient-to-tr from-emerald-800 to-teal-900"></div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                        
-                        <div class="absolute bottom-0 left-0 p-5 w-full">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="bg-emerald-500 text-white text-[10px] font-extrabold px-2 py-1 rounded uppercase tracking-wide">Lingkungan</span>
-                            </div>
-                            <h3 class="text-white font-bold text-base mb-1 leading-snug">Kualitas Udara Kota Memburuk, Apa Solusi Kebijakannya?</h3>
-                        </div>
-                        
-                        <button onclick="showToast('Disimpan ke koleksi!')" class="absolute top-4 right-4 bg-white/20 backdrop-blur-md rounded-full w-9 h-9 flex items-center justify-center text-white hover:bg-white/40 transition-colors">
-                            <i class="far fa-bookmark"></i>
-                        </button>
-                    </div>
-
+                    <button onclick="event.stopPropagation(); showToast('Artikel disimpan!')" class="absolute top-5 right-5 bg-white/20 backdrop-blur-md rounded-full w-10 h-10 flex items-center justify-center text-white hover:bg-white/40 transition-colors z-10">
+                        <i class="far fa-bookmark"></i>
+                    </button>
                 </div>
-            </section>
-        </main>
-
-        <!-- Bottom Navigation Bar (Fixed at bottom) -->
-        <nav class="bg-white border-t border-gray-100 shrink-0 relative z-50">
-            <!-- Grid layout ensures perfect horizontal distribution -->
-            <div class="grid grid-cols-4 h-16">
-                
-                <button onclick="switchTab('fact-check', this)" class="nav-item flex flex-col items-center justify-center w-full h-full text-indigo-600 transition-colors">
-                    <i class="fas fa-shield-check text-xl mb-1 icon-element scale-110 transition-transform"></i>
-                    <span class="text-[10px] font-bold text-element transition-opacity">Verifikasi</span>
-                </button>
-
-                <button onclick="switchTab('dialogue', this)" class="nav-item flex flex-col items-center justify-center w-full h-full text-gray-400 transition-colors">
-                    <i class="far fa-comments text-xl mb-1 icon-element transition-transform"></i>
-                    <span class="text-[10px] font-bold text-element opacity-0 transition-opacity">Diskusi</span>
-                </button>
-
-                <button onclick="switchTab('insight', this)" class="nav-item flex flex-col items-center justify-center w-full h-full text-gray-400 transition-colors">
-                    <i class="far fa-lightbulb text-xl mb-1 icon-element transition-transform"></i>
-                    <span class="text-[10px] font-bold text-element opacity-0 transition-opacity">Wawasan</span>
-                </button>
-                
-                <button onclick="showToast('Membuka Profil...')" class="nav-item flex flex-col items-center justify-center w-full h-full text-gray-400 transition-colors">
-                    <i class="far fa-user text-xl mb-1 icon-element transition-transform"></i>
-                    <span class="text-[10px] font-bold text-element opacity-0 transition-opacity">Profil</span>
-                </button>
 
             </div>
-        </nav>
-        
-        <!-- Toast Notification Element -->
-        <div id="toast" class="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-900/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-xs font-medium opacity-0 pointer-events-none transition-opacity duration-300 shadow-lg z-50 whitespace-nowrap">
-            Notifikasi
-        </div>
+        </section>
+    </main>
 
+    <nav class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-safe">
+        <!-- Max-width container to align with content on desktop -->
+        <div class="max-w-2xl mx-auto grid grid-cols-4 h-16 md:h-20">
+            
+            <button onclick="switchTab('fact-check', this)" class="nav-item flex flex-col items-center justify-center w-full h-full text-indigo-600 transition-colors group">
+                <i class="fas fa-shield-check text-xl md:text-2xl mb-1 icon-element scale-110 transition-transform group-hover:scale-110"></i>
+                <span class="text-[10px] md:text-xs font-bold text-element transition-opacity">Verifikasi</span>
+            </button>
+
+            <button onclick="switchTab('dialogue', this)" class="nav-item flex flex-col items-center justify-center w-full h-full text-slate-400 transition-colors group hover:text-indigo-400">
+                <i class="far fa-comments text-xl md:text-2xl mb-1 icon-element transition-transform group-hover:scale-110"></i>
+                <span class="text-[10px] md:text-xs font-bold text-element opacity-0 transition-opacity">Diskusi</span>
+            </button>
+
+            <button onclick="switchTab('insight', this)" class="nav-item flex flex-col items-center justify-center w-full h-full text-slate-400 transition-colors group hover:text-indigo-400">
+                <i class="far fa-lightbulb text-xl md:text-2xl mb-1 icon-element transition-transform group-hover:scale-110"></i>
+                <span class="text-[10px] md:text-xs font-bold text-element opacity-0 transition-opacity">Wawasan</span>
+            </button>
+            
+            <button onclick="showToast('Membuka Profil Pengguna...')" class="nav-item flex flex-col items-center justify-center w-full h-full text-slate-400 transition-colors group hover:text-indigo-400">
+                <i class="far fa-user text-xl md:text-2xl mb-1 icon-element transition-transform group-hover:scale-110"></i>
+                <span class="text-[10px] md:text-xs font-bold text-element opacity-0 transition-opacity">Profil</span>
+            </button>
+
+        </div>
+    </nav>
+    
+    <div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-gray-900/95 backdrop-blur-sm text-white px-5 py-3 rounded-full text-sm font-semibold opacity-0 pointer-events-none transition-all duration-300 shadow-xl z-50 whitespace-nowrap flex items-center gap-2 translate-y-4">
+        <i class="fas fa-info-circle text-indigo-400"></i>
+        <span id="toast-message">Notifikasi</span>
     </div>
 
     <script>
@@ -394,14 +366,14 @@
             const targetView = document.getElementById('view-' + tabId);
             if(targetView) {
                 targetView.classList.add('active');
-                // Scroll to top of main container, not the view itself
-                document.querySelector('main').scrollTop = 0;
+                // Scroll to top naturally
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
             // Reset navigation styling
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('text-indigo-600');
-                item.classList.add('text-gray-400');
+                item.classList.add('text-slate-400');
                 
                 const icon = item.querySelector('.icon-element');
                 icon.classList.remove('scale-110');
@@ -414,7 +386,7 @@
 
             // Set active navigation styling
             if(element) {
-                element.classList.remove('text-gray-400');
+                element.classList.remove('text-slate-400');
                 element.classList.add('text-indigo-600');
                 
                 const icon = element.querySelector('.icon-element');
@@ -431,13 +403,18 @@
         let toastTimeout;
         function showToast(message) {
             const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.remove('opacity-0');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = message;
+            
+            // Show animation
+            toast.classList.remove('opacity-0', 'translate-y-4');
             
             clearTimeout(toastTimeout);
             toastTimeout = setTimeout(() => {
-                toast.classList.add('opacity-0');
-            }, 2000); // Hide after 2 seconds
+                // Hide animation
+                toast.classList.add('opacity-0', 'translate-y-4');
+            }, 2500); // Hide after 2.5 seconds
         }
 
         // 3. Like Button Toggle Logic
@@ -450,14 +427,19 @@
             if (icon.classList.contains('far')) {
                 // If not liked -> Like it
                 icon.classList.replace('far', 'fas');
-                btn.classList.remove('text-gray-400');
+                btn.classList.remove('text-slate-400');
                 btn.classList.add('text-pink-500');
+                
+                // Add pop animation class temporarily
+                icon.classList.add('scale-125');
+                setTimeout(() => icon.classList.remove('scale-125'), 200);
+                
                 count++;
             } else {
                 // If liked -> Unlike it
                 icon.classList.replace('fas', 'far');
                 btn.classList.remove('text-pink-500');
-                btn.classList.add('text-gray-400');
+                btn.classList.add('text-slate-400');
                 count--;
             }
             
